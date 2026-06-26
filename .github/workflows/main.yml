@@ -1,0 +1,40 @@
+name: Auto-doc 
+run-name: Auto-doc is generating doxygen site. 
+on: 
+  push:
+    branches: 
+      - main
+
+jobs: 
+  format: 
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./docs
+    steps:
+      - uses: actions/checkout@v7
+      - name: Download and Extract Doxygen Binary 
+        run: |
+          wget https://github.com/doxygen/doxygen/releases/download/Release_1_17_0/doxygen-1.17.0.linux.bin.tar.gz
+          gunzip doxygen-1.17.0.linux.bin.tar.gz
+          tar -xf doxygen-1.17.0.linux.bin.tar
+      - name: Install Graphviz
+        run: |
+          sudo apt install graphviz
+      - name: Git Setup 
+        run: |
+          git checkout main 
+          git pull 
+
+          git config user.name "Auto-doc[bot]"
+          git config user.email "Auto-doc[bot]@users.noreply.github.com"
+          git checkout gh-pages
+      - name: Generate Doxygen Site 
+        run: |
+          ./doxygen-1.17.0/bin/doxygen Doxyfile 
+      - name: Clean Up Doxygen
+        run: |
+          rm -rf doxygen-1.17.0.linux.bin.tar
+          rm -rf doxygen-1.17.0
+
