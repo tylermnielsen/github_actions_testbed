@@ -42,6 +42,11 @@ jobs:
           rm -rf docs
           mkdir -p docs
           ./doxygen-1.17.0/bin/doxygen Doxyfile 
+      - name: Commit 
+        run: |
+          git add .
+          git commit -am "Auto-docs generated"
+          git push 
       - name: Clean Up Doxygen
         run: |
           rm -rf doxygen-1.17.0.linux.bin.tar
