@@ -6,17 +6,23 @@ on:
       - main
 
 jobs: 
-  format: 
+  generate: 
     runs-on: ubuntu-latest
+
+    permissions: 
+      contents: write
+
     defaults:
       run:
         shell: bash
         working-directory: .
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v7
         with: 
           fetch-depth: 0
+          persist-credentials: true
       - name: Download and Extract Doxygen Binary 
         run: |
           wget https://github.com/doxygen/doxygen/releases/download/Release_1_17_0/doxygen-1.17.0.linux.bin.tar.gz
@@ -42,13 +48,13 @@ jobs:
           rm -rf docs
           mkdir -p docs
           ./doxygen-1.17.0/bin/doxygen Doxyfile 
+      - name: Clean Up Doxygen
+        run: |
+          rm -rf doxygen-1.17.0.linux.bin.tar
+          rm -rf doxygen-1.17.0
       - name: Commit 
         run: |
           git add .
           git commit -am "Auto-docs generated"
           git push 
-      - name: Clean Up Doxygen
-        run: |
-          rm -rf doxygen-1.17.0.linux.bin.tar
-          rm -rf doxygen-1.17.0
-
+      
