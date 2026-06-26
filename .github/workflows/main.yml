@@ -13,7 +13,10 @@ jobs:
         shell: bash
         working-directory: .
     steps:
-      - uses: actions/checkout@v7
+      - name: Checkout Code
+        uses: actions/checkout@v7
+        with: 
+          fetch-depth: 0
       - name: Download and Extract Doxygen Binary 
         run: |
           wget https://github.com/doxygen/doxygen/releases/download/Release_1_17_0/doxygen-1.17.0.linux.bin.tar.gz
@@ -29,7 +32,10 @@ jobs:
 
           git config user.name "Auto-doc[bot]"
           git config user.email "Auto-doc[bot]@users.noreply.github.com"
+
           git checkout gh-pages
+          git pull
+          git fetch origin main 
           git merge -X theirs main 
       - name: Generate Doxygen Site 
         run: |
