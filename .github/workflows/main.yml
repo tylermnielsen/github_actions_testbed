@@ -11,7 +11,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./docs
+        working-directory: .
     steps:
       - uses: actions/checkout@v7
       - name: Download and Extract Doxygen Binary 
@@ -30,8 +30,11 @@ jobs:
           git config user.name "Auto-doc[bot]"
           git config user.email "Auto-doc[bot]@users.noreply.github.com"
           git checkout gh-pages
+          git merge -X theirs main 
       - name: Generate Doxygen Site 
         run: |
+          rm -rf docs
+          mkdir -p docs
           ./doxygen-1.17.0/bin/doxygen Doxyfile 
       - name: Clean Up Doxygen
         run: |
